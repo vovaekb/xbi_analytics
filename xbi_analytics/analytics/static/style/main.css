@@ -1,0 +1,11 @@
+#chart {
+    width: 500px;
+    float: left;
+}
+
+#gridContainer {
+    width: 500px;
+    height: 380px;
+    float: left;
+    margin: 0 20px;
+}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block page_content %}
+<!--{% load static %}-->
+<!--<script src="{% static 'js/dashboard.js' %}"></script>-->
+<script type="text/javascript">
+$(function() {
+    // Graph
+    graph_stats = {{ graph_stats|safe}}
+    var graph_stats_items = [];
+    for(var i = 0; i < graph_stats.length; i++) {
+        graph_stats_items.push(graph_stats[i]['fields']);
+    }
+    console.log(graph_stats_items);
+
+    var chartDataSource = new DevExpress.data.DataSource({
+        store: graph_stats_items,
+    });
+
+    var chartOptions = {
+        dataSource: chartDataSource,
+        title: "Rates by months",
+        size: {
+            height: 420
+        },
+        series: {
+            argumentField: "month",
+            valueField: "rate",
+            type: "spline"
+        },
+        legend: {
+            visible: false
+        },
+        commonPaneSettings: {
+            border: {
+                visible: true,
+                width: 2,
+                top: false,
+                right: false
+            }
+        },
+        "export": {
+            enabled: true
+        },
+        tooltip: {
+            enabled: true,
+            customizeTooltip: function (arg) {
+                return {
+                    text: arg.valueText + "&#176C"
+                };
+            }
+        },
+        valueAxis: {
+            valueType: "numeric",
+            grid: {
+                opacity: 0.2
+            },
+            label: {
+                customizeText: function() {
+                    return this.valueText + "&#176C";
+                }
+            }
+        },
+        argumentAxis: {
+            type: "discrete",
+            grid: {
+                visible: true,
+                opacity: 0.5
+            }
+        },
+        loadingIndicator: {
+            enabled: true
+        }
+    };
+
+    $("#chart").dxChart(chartOptions);
+
+    // Grid data
+    grid_stats = {{ grid_stats|safe }}
+    var grid_stats_items = [];
+    for(var i = 0; i < grid_stats.length; i++) {
+        grid_stats_items.push(grid_stats[i]['fields']);
+    }
+    console.log(grid_stats_items);
+
+    var gridDataSource = new DevExpress.data.DataSource({
+        store: grid_stats_items,
+    });
+
+    $("#gridContainer").dxDataGrid({
+        dataSource: gridDataSource,
+        remoteOperations: true,
+        scrolling: {
+            mode: "virtual",
+            rowRenderingMode: "virtual"
+        },
+        paging: {
+            pageSize: 100
+        },
+        headerFilter: {
+            visible: true,
+            allowSearch: true
+        },
+        wordWrapEnabled: true,
+        showBorders: true,
+        columns: [{
+            dataField: "group",
+            width: 75
+        }, {
+            caption: "number",
+            dataField: "number",
+            width: 150
+        }, {
+            caption: "sending_city",
+            dataField: "sending_city",
+            width: 120
+        }, {
+            caption: "receiving_city",
+            dataField: "receiving_city"
+        }]
+    });
+
+    // Pie chart
+
+    piechart_stats = {{ piechart_stats|safe }}
+    var piechart_stats_items = [];
+    for(var i = 0; i < piechart_stats.length; i++) {
+        piechart_stats_items.push(piechart_stats[i]['fields']);
+    }
+    console.log(piechart_stats_items);
+
+    var piechartDataSource = new DevExpress.data.DataSource({
+        store: piechart_stats_items,
+    });
+
+    $("#pie").dxPieChart({
+        palette: "bright",
+        dataSource: piechartDataSource,
+        title: "Fractions by groups",
+        legend: {
+            orientation: "horizontal",
+            itemTextPosition: "right",
+            horizontalAlignment: "center",
+            verticalAlignment: "bottom",
+            columnCount: 4
+        },
+        "export": {
+            enabled: true
+        },
+        series: [{
+            argumentField: "group",
+            valueField: "fraction",
+            label: {
+                visible: true,
+                font: {
+                    size: 16
+                },
+                connector: {
+                    visible: true,
+                    width: 0.5
+                },
+                position: "columns",
+                customizeText: function(arg) {
+                    return arg.valueText + " (" + arg.percentText + ")";
+                }
+            }
+        }]
+    });
+
+    });
+    </script>
+        <div id="chart-demo">
+            <div id="chart"></div>
+        </div>
+
+<div id="gridContainer"></div>
+<div id="pie"></div>
+{% endblock %}
