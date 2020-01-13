@@ -45,7 +45,7 @@ $(function() {
             enabled: true,
             customizeTooltip: function (arg) {
                 return {
-                    text: arg.valueText + "&#176C"
+                    text: arg.valueText + "%"
                 };
             }
         },
@@ -56,7 +56,7 @@ $(function() {
             },
             label: {
                 customizeText: function() {
-                    return this.valueText + "&#176C";
+                    return this.valueText + "%";
                 }
             }
         },
