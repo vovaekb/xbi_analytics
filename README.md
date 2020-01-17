@@ -31,3 +31,6 @@ Start app:
 python manage.py runserver
 ```
 Open url http://127.0.0.1:8000/dashboard/ in browser.
+
+## Demo on Heroku
+Demo application available on Heroku: https://xbianalytics.herokuapp.com/dashboard/
